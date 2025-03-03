@@ -1,0 +1,28 @@
+.student-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.student-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.remove-button {
+    padding: 0.5rem 1rem;
+    background: white;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.remove-button:hover {
+    background: var(--danger-color);
+    color: white;
+} 

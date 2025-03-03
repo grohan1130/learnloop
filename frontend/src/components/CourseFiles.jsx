@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { courseService } from '../services/api/courseService'
 
 function CourseFiles({ courseId, refreshTrigger }) {
   const [files, setFiles] = useState([])
@@ -10,18 +10,9 @@ function CourseFiles({ courseId, refreshTrigger }) {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('user'))
-        const response = await axios.get(
-          `http://localhost:5002/api/courses/${courseId}/files`,
-          {
-            headers: {
-              'Authorization': JSON.stringify(user)
-            }
-          }
-        )
-
-        if (response.data && response.data.files) {
-          setFiles(response.data.files)
+        const response = await courseService.listMaterials(courseId)
+        if (response && response.files) {
+          setFiles(response.files)
         }
       } catch (error) {
         console.error('Error fetching files:', error)
@@ -41,15 +32,7 @@ function CourseFiles({ courseId, refreshTrigger }) {
     
     try {
       setDeleting(fileKey)
-      const user = JSON.parse(localStorage.getItem('user'))
-      await axios.delete(
-        `http://localhost:5002/api/courses/${courseId}/files/${fileKey}`,
-        {
-          headers: {
-            'Authorization': JSON.stringify(user)
-          }
-        }
-      )
+      await courseService.deleteMaterial(courseId, fileKey)
       
       // Remove file from state
       setFiles(files.filter(file => file.key !== fileKey))

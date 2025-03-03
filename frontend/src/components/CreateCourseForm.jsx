@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { courseService } from '../services/api/courseService'
 
 /**
  * Form component for creating a new course
@@ -37,13 +37,9 @@ function CreateCourseForm({ onClose, onCourseCreated }) {
     e.preventDefault()
     
     try {
-      const user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.post('http://localhost:5002/api/courses/create', {
-        ...formData,
-        teacherId: user._id
-      })
+      const response = await courseService.createCourse(formData)
 
-      if (response.data) {
+      if (response) {
         onCourseCreated()
         onClose()
       }

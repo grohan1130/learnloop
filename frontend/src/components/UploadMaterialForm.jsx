@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { courseService } from '../services/api/courseService'
 
 function UploadMaterialForm({ courseId, onClose, onUploadComplete }) {
   const [title, setTitle] = useState('')
@@ -29,22 +29,10 @@ function UploadMaterialForm({ courseId, onClose, onUploadComplete }) {
       formData.append('title', title)
       formData.append('description', description)
 
-      const user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.post(
-        `http://localhost:5002/api/courses/${courseId}/upload`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': JSON.stringify(user)
-          }
-        }
-      )
+      await courseService.uploadMaterial(courseId, formData)
 
-      if (response.data) {
-        onUploadComplete && onUploadComplete()
-        onClose()
-      }
+      onUploadComplete && onUploadComplete()
+      onClose()
     } catch (error) {
       console.error('Upload error:', error)
       setError(error.response?.data?.error || 'Failed to upload file')

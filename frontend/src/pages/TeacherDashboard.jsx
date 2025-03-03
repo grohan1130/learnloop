@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import { courseService } from '../services/api/courseService'
+import { authService } from '../services/api/authService'
 import CreateCourseForm from '../components/CreateCourseForm'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 
@@ -27,13 +28,13 @@ function TeacherDashboard() {
   const fetchCourses = async (teacherId) => {
     try {
       console.log('Attempting to fetch courses with ID:', teacherId)
-      const response = await axios.get(`http://localhost:5002/api/courses/teacher/${teacherId}`)
+      const response = await courseService.getTeacherCourses(teacherId)
       
-      if (response.data && response.data.courses) {
-        console.log('Received courses:', response.data.courses)
-        setCourses(response.data.courses)
+      if (response && response.courses) {
+        console.log('Received courses:', response.courses)
+        setCourses(response.courses)
       } else {
-        console.log('No courses found:', response.data)
+        console.log('No courses found:', response)
         setCourses([])
       }
       
@@ -118,7 +119,7 @@ function TeacherDashboard() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
+    authService.logout()
     navigate('/login')
   }
 

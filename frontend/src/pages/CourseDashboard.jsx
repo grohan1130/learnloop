@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import { courseService } from '../services/api/courseService'
+import { authService } from '../services/api/authService'
 import UploadMaterialForm from '../components/UploadMaterialForm'
 import CourseFiles from '../components/CourseFiles'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
+import StudentManagement from '../components/StudentManagement'
 
 /**
  * Dashboard for managing a specific course
@@ -18,9 +20,10 @@ function CourseDashboard() {
   const navigate = useNavigate()
   const [showUploadForm, setShowUploadForm] = useState(false)
   const [refreshFiles, setRefreshFiles] = useState(0)
+  const [showStudentManagement, setShowStudentManagement] = useState(false)
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
+    authService.logout()
     navigate('/login')
   }
 
@@ -33,17 +36,10 @@ function CourseDashboard() {
           return
         }
 
-        const response = await axios.get(
-          `http://localhost:5002/api/courses/${courseId}`,
-          {
-            headers: {
-              'Authorization': JSON.stringify(user)
-            }
-          }
-        )
+        const response = await courseService.getCourseDetails(courseId)
         
-        if (response.data && response.data.course) {
-          setCourse(response.data.course)
+        if (response && response.course) {
+          setCourse(response.course)
         } else {
           setError('Invalid course data received')
         }
@@ -103,7 +99,9 @@ function CourseDashboard() {
       <div className="course-management">
         <h2>Course Management</h2>
         <div className="management-options">
-          <button>Manage Students</button>
+          <button onClick={() => setShowStudentManagement(true)}>
+            Manage Students
+          </button>
           <button>Create Assignment</button>
           <button onClick={() => setShowUploadForm(true)}>
             Add Course Material
@@ -112,6 +110,13 @@ function CourseDashboard() {
       </div>
 
       <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
+
+      {showStudentManagement && (
+        <StudentManagement
+          courseId={courseId}
+          onClose={() => setShowStudentManagement(false)}
+        />
+      )}
 
       {showUploadForm && (
         <UploadMaterialForm 

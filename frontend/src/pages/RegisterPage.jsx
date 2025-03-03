@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import { authService } from '../services/api/authService'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 
 /**
@@ -115,9 +115,12 @@ function RegisterPage() {
       try {
         setSubmitError('')
         console.log('Sending registration data:', formData)
-        const response = await axios.post('http://localhost:5002/api/register', formData)
-        console.log('Registration response:', response.data)
-        navigate('/login')
+        const response = formData.role === 'teacher' 
+          ? await authService.registerTeacher(formData)
+          : await authService.registerStudent(formData)
+        console.log('Registration response:', response)
+        localStorage.setItem('user', JSON.stringify(response))
+        navigate(formData.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student')
       } catch (error) {
         console.error('Registration error:', error)
         console.error('Error response:', error.response?.data)

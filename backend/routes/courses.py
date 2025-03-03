@@ -193,3 +193,31 @@ def delete_file(course_id, file_key):
     except Exception as e:
         print(f"Error deleting file: {e}")
         return create_response(error="Failed to delete file", status_code=500) 
+
+@courses_bp.route('/<course_id>', methods=['PUT'])
+@teacher_required
+def update_course(course_id):
+    try:
+        data = request.json
+        course = CourseService.update_course(course_id, data)
+        return create_response({"course": course})
+    except Exception as e:
+        return create_response(error=str(e), status_code=500)
+
+@courses_bp.route('/<course_id>/students', methods=['GET'])
+@teacher_required
+def get_course_students(course_id):
+    try:
+        students = CourseService.get_course_students(course_id)
+        return create_response({"students": students})
+    except Exception as e:
+        return create_response(error=str(e), status_code=500)
+
+@courses_bp.route('/<course_id>/students/<student_id>', methods=['DELETE'])
+@teacher_required
+def remove_student(course_id, student_id):
+    try:
+        CourseService.remove_student(course_id, student_id)
+        return create_response({"message": "Student removed successfully"})
+    except Exception as e:
+        return create_response(error=str(e), status_code=500) 

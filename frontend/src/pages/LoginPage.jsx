@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import { authService } from '../services/api/authService'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 
 /**
@@ -46,15 +46,16 @@ function LoginPage() {
     }
 
     try {
-      const response = await axios.post('http://localhost:5002/api/login', formData)
+      const response = await authService.login({
+        username: formData.username,
+        password: formData.password,
+        role: formData.role
+      })
       
-      if (response.data && response.data.error) {
-        setError(response.data.error)
-        return
+      if (response) {
+        localStorage.setItem('user', JSON.stringify(response))
+        navigate(formData.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student')
       }
-      
-      localStorage.setItem('user', JSON.stringify(response.data))
-      navigate(formData.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student')
     } catch (error) {
       console.error('Login error:', error)
       if (error.response?.status === 401) {

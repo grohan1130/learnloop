@@ -12,6 +12,7 @@
 @import './components/_forms.css';
 @import './components/_modals.css';
 @import './components/_files.css';
+@import './components/_modal.css';
 
 @import './pages/_home.css';
 @import './pages/_auth.css';
