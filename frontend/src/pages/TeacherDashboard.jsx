@@ -4,6 +4,7 @@ import { courseService } from '../services/api/courseService'
 import { authService } from '../services/api/authService'
 import CreateCourseForm from '../components/CreateCourseForm'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
+import '../styles/components/_teacherDashboard.css'
 
 /**
  * Dashboard for teacher users
@@ -77,59 +78,6 @@ function TeacherDashboard() {
     navigate('/login')
   }
 
-  /**
-   * Renders the course list section
-   * @component
-   * @returns {JSX.Element} Course list component
-   */
-  const CourseList = () => {
-    if (loading) return <div className="course-section">Loading courses...</div>
-    if (error) return <div className="course-section" style={{color: 'red'}}>{error}</div>
-    if (courses.length === 0) return (
-      <div className="course-section">
-        <h2>Your Courses</h2>
-        <p>No courses created yet.</p>
-        <button 
-          className="submit-button"
-          onClick={() => setShowCreateForm(true)}
-        >
-          Create New Course
-        </button>
-      </div>
-    )
-
-    return (
-      <div className="course-section">
-        <div className="course-section-header">
-          <h2>Your Courses</h2>
-          <button 
-            className="submit-button"
-            onClick={() => setShowCreateForm(true)}
-          >
-            Create New Course
-          </button>
-        </div>
-        <div className="course-list">
-          {courses.map(course => (
-            <div 
-              key={course._id} 
-              className="course-card"
-              onClick={() => navigate(`/course/${course._id}`)}
-              role="button"
-              tabIndex={0}
-            >
-              <h4>{course.courseName}</h4>
-              <p>{course.department} {course.courseNumber}</p>
-              <p>{course.term} {course.year}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (!userData) return null
-
   return (
     <div className="dashboard-container">
       <nav className="home-nav">
@@ -145,14 +93,55 @@ function TeacherDashboard() {
         </div>
       </nav>
 
-      <div className="dashboard-header">
-        <div>
-          <h1>Welcome, {userData.firstName}!</h1>
-          <p>Instructor at {userData.institution}</p>
+      <div className="dashboard-content">
+        <div className="dashboard-header">
+          <div>
+            <h1>Welcome, {userData?.firstName}!</h1>
+            <p>Instructor at {userData?.institution}</p>
+          </div>
+        </div>
+
+        <div className="dashboard-section">
+          <div className="section-header">
+            <h2>Your Courses</h2>
+            <button 
+              className="create-button"
+              onClick={() => setShowCreateForm(true)}
+            >
+              Create New Course
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="loading-message">Loading courses...</div>
+          ) : error ? (
+            <div className="error-message">{error}</div>
+          ) : courses.length === 0 ? (
+            <div className="empty-state">
+              <p>No courses created yet.</p>
+              <p>Click 'Create New Course' to get started.</p>
+            </div>
+          ) : (
+            <div className="course-grid">
+              {courses.map(course => (
+                <div 
+                  key={course._id} 
+                  className="course-card"
+                  onClick={() => navigate(`/course/${course._id}`)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <h3>{course.courseName}</h3>
+                  <div className="course-details">
+                    <p><strong>{course.department} {course.courseNumber}</strong></p>
+                    <p>{course.term} {course.year}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      <CourseList />
 
       {showCreateForm && (
         <CreateCourseForm 

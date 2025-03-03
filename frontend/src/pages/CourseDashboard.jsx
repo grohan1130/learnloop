@@ -7,6 +7,7 @@ import CourseFiles from '../components/CourseFiles'
 import CourseCodeDisplay from '../components/CourseCodeDisplay'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 import StudentManagement from '../components/StudentManagement'
+import '../styles/components/_courseDashboard.css'
 
 /**
  * Dashboard for managing a specific course
@@ -88,12 +89,6 @@ function CourseDashboard() {
           <Link to="/" className="logo">LearnLoop</Link>
         </div>
         <div className="nav-buttons">
-          <button 
-            className="back-button"
-            onClick={() => navigate('/dashboard/teacher')}
-          >
-            ← Back to Dashboard
-          </button>
           <button className="nav-button">My Account</button>
           <button className="logout-button" onClick={handleLogout}>
             Log Out
@@ -101,21 +96,28 @@ function CourseDashboard() {
         </div>
       </nav>
 
-      <div className="dashboard-header">
-        <div className="header-content">
-          <h1 className="course-title">
-            {course.department} {course.courseNumber}: {course.courseName}
-          </h1>
-          <p className="course-term">{course.term} {course.year}</p>
-          <p className="course-instructor">
-            Professor {course.teacher?.firstName} {course.teacher?.lastName}
-          </p>
-        </div>
-      </div>
-      
       <div className="dashboard-content">
-        {course.teacher && <CourseCodeDisplay courseId={courseId} />}
-        
+        <div className="dashboard-header">
+          <div>
+            <h1>{course?.courseName}</h1>
+            <p>{course?.department} {course?.courseNumber} • {course?.term} {course?.year}</p>
+          </div>
+        </div>
+
+        <div className="dashboard-section">
+          <div className="section-header">
+            <h2>Course Materials</h2>
+            <button 
+              className="create-button"
+              onClick={() => setShowUploadForm(true)}
+            >
+              Add Course Material
+            </button>
+          </div>
+
+          <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
+        </div>
+
         <div className="course-management">
           <h2>Course Management</h2>
           <div className="management-options">
@@ -123,13 +125,8 @@ function CourseDashboard() {
               Manage Students
             </button>
             <button>Create Assignment</button>
-            <button onClick={() => setShowUploadForm(true)}>
-              Add Course Material
-            </button>
           </div>
         </div>
-
-        <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
 
         {showStudentManagement && (
           <StudentManagement

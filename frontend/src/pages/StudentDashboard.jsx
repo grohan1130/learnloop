@@ -4,6 +4,7 @@ import { courseService } from '../services/api/courseService'
 import { authService } from '../services/api/authService'
 import EnrollCourseForm from '../components/EnrollCourseForm'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
+import '../styles/components/_studentDashboard.css'
 import '../styles/components/_courseGrid.css'
 
 /**
@@ -16,6 +17,7 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showEnrollForm, setShowEnrollForm] = useState(false);
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +35,7 @@ const StudentDashboard = () => {
           setLoading(false);
           return;
         }
+        setUserData(user);
         const userId = user._id || user.userId;
         const response = await courseService.getStudentCourses(userId);
         setCourses(response.courses || []);
@@ -57,8 +60,8 @@ const StudentDashboard = () => {
     await fetchCourses(); // Refresh courses after enrollment
   }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="loading-spinner">Loading...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="dashboard-container">
@@ -82,6 +85,13 @@ const StudentDashboard = () => {
       </nav>
 
       <div className="dashboard-content">
+        <div className="dashboard-header">
+          <div>
+            <h1>Welcome, {userData?.firstName} {userData?.lastName}!</h1>
+            <p>Student at {userData?.institution}</p>
+          </div>
+        </div>
+
         <div className="dashboard-section">
           <div className="section-header">
             <h2>Your Courses</h2>

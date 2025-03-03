@@ -59,16 +59,19 @@ function CourseFiles({ courseId, refreshTrigger }) {
     }
   }
 
-  if (loading) return <div>Loading files...</div>
-  if (error) return <div className="error-message">{error}</div>
-
   return (
-    <div className="course-files">
-      <h3>Course Materials</h3>
-      {files.length === 0 ? (
-        <p>No files uploaded yet.</p>
+    <div>
+      {loading ? (
+        <div className="loading-message">Loading files...</div>
+      ) : error ? (
+        <div className="error-message">{error}</div>
+      ) : files.length === 0 ? (
+        <div className="empty-state">
+          <p>No course materials uploaded yet.</p>
+          <p>Click 'Add Course Material' to upload your first file.</p>
+        </div>
       ) : (
-        <div className="file-list">
+        <div className="files-grid">
           {files.map((file) => (
             <div key={file.key} className="file-item">
               <div className="file-info">
