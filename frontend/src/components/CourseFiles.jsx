@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-function CourseFiles({ courseId }) {
+function CourseFiles({ courseId, refreshTrigger }) {
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [deleting, setDeleting] = useState(null)
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -31,7 +32,34 @@ function CourseFiles({ courseId }) {
     }
 
     fetchFiles()
-  }, [courseId])
+  }, [courseId, refreshTrigger])
+
+  const handleDelete = async (fileKey) => {
+    if (!window.confirm('Are you sure you want to delete this file?')) {
+      return
+    }
+    
+    try {
+      setDeleting(fileKey)
+      const user = JSON.parse(localStorage.getItem('user'))
+      await axios.delete(
+        `http://localhost:5002/api/courses/${courseId}/files/${fileKey}`,
+        {
+          headers: {
+            'Authorization': JSON.stringify(user)
+          }
+        }
+      )
+      
+      // Remove file from state
+      setFiles(files.filter(file => file.key !== fileKey))
+    } catch (error) {
+      console.error('Error deleting file:', error)
+      alert('Failed to delete file')
+    } finally {
+      setDeleting(null)
+    }
+  }
 
   if (loading) return <div>Loading files...</div>
   if (error) return <div className="error-message">{error}</div>
@@ -51,14 +79,23 @@ function CourseFiles({ courseId }) {
                   {new Date(file.lastModified).toLocaleDateString()}
                 </span>
               </div>
-              <a 
-                href={file.url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="download-link"
-              >
-                Download
-              </a>
+              <div className="file-actions">
+                <a 
+                  href={file.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="download-link"
+                >
+                  Download
+                </a>
+                <button
+                  onClick={() => handleDelete(file.key)}
+                  className="delete-button"
+                  disabled={deleting === file.key}
+                >
+                  {deleting === file.key ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
             </div>
           ))}
         </div>

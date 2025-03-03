@@ -176,3 +176,20 @@ def get_course_files(course_id):
     except Exception as e:
         print(f"Error getting course files: {e}")
         return create_response(error="Failed to get course files", status_code=500) 
+
+@courses_bp.route('/<course_id>/files/<path:file_key>', methods=['DELETE'])
+@teacher_required
+def delete_file(course_id, file_key):
+    """Delete a course file."""
+    try:
+        # Verify the file belongs to this course
+        if not file_key.startswith(f"courses/{course_id}/"):
+            return create_response(error="Unauthorized access", status_code=403)
+
+        s3_service.delete_file(file_key)
+        return create_response({
+            'message': 'File deleted successfully'
+        })
+    except Exception as e:
+        print(f"Error deleting file: {e}")
+        return create_response(error="Failed to delete file", status_code=500) 

@@ -94,4 +94,16 @@ class S3Service:
             return files
         except Exception as e:
             print(f"Error listing files: {e}")
+            raise
+
+    def delete_file(self, file_key):
+        """Delete a file from S3."""
+        try:
+            self.s3_client.delete_object(
+                Bucket=self.bucket_name,
+                Key=file_key
+            )
+            return True
+        except Exception as e:
+            print(f"Error deleting file: {e}")
             raise 

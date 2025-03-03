@@ -17,6 +17,7 @@ function CourseDashboard() {
   const { courseId } = useParams()
   const navigate = useNavigate()
   const [showUploadForm, setShowUploadForm] = useState(false)
+  const [refreshFiles, setRefreshFiles] = useState(0)
 
   const handleLogout = () => {
     localStorage.removeItem('user')
@@ -59,6 +60,7 @@ function CourseDashboard() {
 
   const handleUploadComplete = () => {
     setShowUploadForm(false)
+    setRefreshFiles(prev => prev + 1)
   }
 
   if (loading) return <div>Loading course details...</div>
@@ -109,7 +111,7 @@ function CourseDashboard() {
         </div>
       </div>
 
-      <CourseFiles courseId={courseId} />
+      <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
 
       {showUploadForm && (
         <UploadMaterialForm 
