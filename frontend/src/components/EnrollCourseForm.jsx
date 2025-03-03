@@ -1,11 +1,26 @@
 import { useState } from 'react'
 import { courseService } from '../services/api/courseService'
 
+/**
+ * Form for students to enroll in courses using a course code
+ * @component
+ * @param {Object} props - Component properties
+ * @param {Function} props.onEnrollment - Callback function called after successful enrollment
+ * @param {Function} props.onClose - Callback function to close the form
+ * @returns {JSX.Element} Course enrollment form
+ */
 function EnrollCourseForm({ onEnrollment, onClose }) {
     const [courseCode, setCourseCode] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
+    /**
+     * Handles form submission for course enrollment
+     * @async
+     * @function
+     * @param {React.FormEvent<HTMLFormElement>} e - The form submission event
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')

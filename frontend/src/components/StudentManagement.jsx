@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import { courseService } from '../services/api/courseService'
 
+/**
+ * Manages student enrollment and information for a course
+ * @component
+ * @param {Object} props - Component properties
+ * @param {string} props.courseId - The ID of the course
+ * @returns {JSX.Element} Student management interface
+ */
 function StudentManagement({ courseId }) {
     const [students, setStudents] = useState([])
     const [loading, setLoading] = useState(true)
@@ -21,6 +28,13 @@ function StudentManagement({ courseId }) {
         fetchStudents()
     }, [courseId])
 
+    /**
+     * Handles student removal from the course
+     * @async
+     * @function
+     * @param {string} studentId - The ID of the student to remove
+     * @returns {Promise<void>}
+     */
     const handleRemoveStudent = async (studentId) => {
         try {
             await courseService.removeStudent(courseId, studentId)

@@ -23,11 +23,22 @@ function CourseDashboard() {
   const [refreshFiles, setRefreshFiles] = useState(0)
   const [showStudentManagement, setShowStudentManagement] = useState(false)
 
+  /**
+   * Handles user logout
+   * @function
+   * @returns {void}
+   */
   const handleLogout = () => {
     authService.logout()
     navigate('/login')
   }
 
+  /**
+   * Handles course management and displays course details
+   * @async
+   * @function fetchCourse
+   * @returns {Promise<void>}
+   */
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -55,6 +66,11 @@ function CourseDashboard() {
     fetchCourse()
   }, [courseId, navigate])
 
+  /**
+   * Handles completion of file upload
+   * @function
+   * @returns {void}
+   */
   const handleUploadComplete = () => {
     setShowUploadForm(false)
     setRefreshFiles(prev => prev + 1)

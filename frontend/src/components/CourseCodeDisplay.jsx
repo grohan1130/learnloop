@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react'
 import { courseService } from '../services/api/courseService'
 
+/**
+ * Displays and manages course enrollment codes
+ * @component
+ * @param {Object} props - Component properties
+ * @param {string} props.courseId - The ID of the course
+ * @returns {JSX.Element} Course code display and management interface
+ */
 function CourseCodeDisplay({ courseId }) {
     const [courseCode, setCourseCode] = useState('')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
+    /**
+     * Fetches the current course code from the server
+     * @async
+     * @function
+     * @returns {Promise<void>}
+     */
     const fetchCourseCode = async () => {
         try {
             const response = await courseService.getCourseCode(courseId)
@@ -21,6 +34,12 @@ function CourseCodeDisplay({ courseId }) {
         fetchCourseCode()
     }, [courseId])
 
+    /**
+     * Generates a new course code
+     * @async
+     * @function
+     * @returns {Promise<void>}
+     */
     const handleGenerateCode = async () => {
         setLoading(true)
         try {

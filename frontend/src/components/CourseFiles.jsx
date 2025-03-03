@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react'
 import { courseService } from '../services/api/courseService'
 
+/**
+ * Displays and manages course materials/files
+ * @component
+ * @param {Object} props - Component properties
+ * @param {string} props.courseId - The ID of the course
+ * @param {number} props.refreshTrigger - Trigger to refresh the file list
+ * @returns {JSX.Element} Course files management interface
+ */
 function CourseFiles({ courseId, refreshTrigger }) {
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(true)
@@ -25,6 +33,13 @@ function CourseFiles({ courseId, refreshTrigger }) {
     fetchFiles()
   }, [courseId, refreshTrigger])
 
+  /**
+   * Handles file deletion
+   * @async
+   * @function
+   * @param {string} fileKey - The key of the file to delete
+   * @returns {Promise<void>}
+   */
   const handleDelete = async (fileKey) => {
     if (!window.confirm('Are you sure you want to delete this file?')) {
       return

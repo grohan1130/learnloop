@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import { authService } from '../services/api/authService'
 
+/**
+ * Displays and manages user profile information
+ * @component
+ * @param {Object} props - Component properties
+ * @param {string} props.userId - The ID of the user
+ * @returns {JSX.Element} User profile interface
+ */
 function UserProfile({ userId }) {
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -21,6 +28,13 @@ function UserProfile({ userId }) {
         fetchProfile()
     }, [userId])
 
+    /**
+     * Updates user profile information
+     * @async
+     * @function
+     * @param {Object} updatedData - The new profile data
+     * @returns {Promise<void>}
+     */
     const handleProfileUpdate = async (updatedData) => {
         try {
             const response = await authService.updateProfile(userId, updatedData)

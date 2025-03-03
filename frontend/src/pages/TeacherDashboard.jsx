@@ -68,9 +68,19 @@ function TeacherDashboard() {
   }, [navigate])
 
   /**
-   * Renders a list of courses
+   * Handles user logout
    * @function
-   * @returns {JSX.Element} The course list component
+   * @returns {void}
+   */
+  const handleLogout = () => {
+    authService.logout()
+    navigate('/login')
+  }
+
+  /**
+   * Renders the course list section
+   * @component
+   * @returns {JSX.Element} Course list component
    */
   const CourseList = () => {
     if (loading) return <div className="course-section">Loading courses...</div>
@@ -116,11 +126,6 @@ function TeacherDashboard() {
         </div>
       </div>
     )
-  }
-
-  const handleLogout = () => {
-    authService.logout()
-    navigate('/login')
   }
 
   if (!userData) return null
