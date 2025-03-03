@@ -4,8 +4,13 @@ from utils.helpers import create_response
 from typing import Tuple, Dict, Any
 import json
 from functools import wraps
+from services.s3_service import S3Service
+import io
+from datetime import datetime
 
 courses_bp = Blueprint('courses', __name__)
+
+s3_service = S3Service()
 
 def teacher_required(f):
     @wraps(f)
@@ -120,3 +125,54 @@ def get_course_details(course_id: str) -> Tuple[Dict[str, Any], int]:
     except Exception as e:
         print(f"Error in get_course_details: {str(e)}")
         return create_response(error="Failed to fetch course details", status_code=500) 
+
+@courses_bp.route('/<course_id>/upload', methods=['POST'])
+def upload_material(course_id):
+    """Handle course material upload."""
+    try:
+        if 'file' not in request.files:
+            return create_response(error="No file provided", status_code=400)
+            
+        file = request.files['file']
+        if not file.filename:
+            return create_response(error="No file selected", status_code=400)
+            
+        # Check if file is PDF
+        if not file.filename.lower().endswith('.pdf'):
+            return create_response(error="Only PDF files are allowed", status_code=400)
+
+        # Get other form data
+        title = request.form.get('title')
+        description = request.form.get('description', '')
+
+        if not title:
+            return create_response(error="Title is required", status_code=400)
+
+        # Upload file to S3
+        file_key = s3_service.upload_file(
+            file_data=file.read(),
+            original_filename=title,
+            course_id=course_id
+        )
+
+        return create_response({
+            'message': 'Material uploaded successfully',
+            'fileKey': file_key
+        }, status_code=201)
+
+    except Exception as e:
+        print(f"Error uploading material: {e}")
+        return create_response(error="Failed to upload material", status_code=500) 
+
+@courses_bp.route('/<course_id>/files', methods=['GET'])
+@teacher_required
+def get_course_files(course_id):
+    """Get all files uploaded for a course."""
+    try:
+        files = s3_service.list_course_files(course_id)
+        return create_response({
+            'files': files
+        })
+    except Exception as e:
+        print(f"Error getting course files: {e}")
+        return create_response(error="Failed to get course files", status_code=500) 

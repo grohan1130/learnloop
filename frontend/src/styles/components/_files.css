@@ -1,0 +1,85 @@
+.course-files {
+  background: white;  /* Restore from red test */
+  padding: 2rem;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-md);
+  margin: 2rem;
+}
+
+.course-files h3 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;  /* Limit width for better readability */
+  margin: 0 auto;    /* Center the list */
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #eff5ff;  /* Match the course card background */
+  border-radius: var(--border-radius-lg);
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+  width: 100%;      /* Ensure full width */
+}
+
+.file-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  background: #e5eeff;  /* Match the course card hover state */
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: var(--text-md);
+}
+
+.file-date {
+  font-size: var(--text-sm);
+  color: var(--text-color);
+}
+
+.download-link {
+  padding: 0.75rem 1.25rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius-lg);
+  text-decoration: none;
+  font-size: var(--text-base);
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.download-link:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Empty state styling */
+.course-files p {
+  color: var(--text-color);
+  text-align: center;
+  padding: 2rem;
+  background: #eff5ff;
+  border-radius: var(--border-radius-lg);
+  font-size: var(--text-md);
+} 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import UploadMaterialForm from '../components/UploadMaterialForm'
+import CourseFiles from '../components/CourseFiles'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 
 /**
@@ -56,6 +57,10 @@ function CourseDashboard() {
     fetchCourse()
   }, [courseId, navigate])
 
+  const handleUploadComplete = () => {
+    setShowUploadForm(false)
+  }
+
   if (loading) return <div>Loading course details...</div>
   if (error) return <div style={{color: 'red'}}>{error}</div>
   if (!course) return <div>Course not found</div>
@@ -104,8 +109,14 @@ function CourseDashboard() {
         </div>
       </div>
 
+      <CourseFiles courseId={courseId} />
+
       {showUploadForm && (
-        <UploadMaterialForm onClose={() => setShowUploadForm(false)} />
+        <UploadMaterialForm 
+          courseId={courseId}
+          onClose={() => setShowUploadForm(false)}
+          onUploadComplete={handleUploadComplete}
+        />
       )}
     </div>
   )

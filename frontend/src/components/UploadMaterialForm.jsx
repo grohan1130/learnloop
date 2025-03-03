@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import axios from 'axios'
 
-function UploadMaterialForm({ onClose }) {
+function UploadMaterialForm({ courseId, onClose, onUploadComplete }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
+  const [uploading, setUploading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
     if (!title.trim() || !file) {
@@ -14,20 +16,41 @@ function UploadMaterialForm({ onClose }) {
       return
     }
 
-    // For now, just log the form data
-    console.log('Form submitted:', {
-      title,
-      description,
-      fileName: file.name,
-      fileType: file.type,
-      fileSize: file.size
-    })
+    // Check file type
+    if (!file.type.includes('pdf')) {
+      setError('Only PDF files are allowed')
+      return
+    }
 
-    // Clear form
-    setTitle('')
-    setDescription('')
-    setFile(null)
-    onClose()
+    try {
+      setUploading(true)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('title', title)
+      formData.append('description', description)
+
+      const user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.post(
+        `http://localhost:5002/api/courses/${courseId}/upload`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': JSON.stringify(user)
+          }
+        }
+      )
+
+      if (response.data) {
+        onUploadComplete && onUploadComplete()
+        onClose()
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      setError(error.response?.data?.error || 'Failed to upload file')
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -65,10 +88,11 @@ function UploadMaterialForm({ onClose }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="file">Select File:</label>
+            <label htmlFor="file">Select PDF File:</label>
             <input
               type="file"
               id="file"
+              accept=".pdf"
               onChange={(e) => setFile(e.target.files[0])}
               required
             />
@@ -78,8 +102,12 @@ function UploadMaterialForm({ onClose }) {
             <button type="button" onClick={onClose} className="cancel-button">
               Cancel
             </button>
-            <button type="submit" className="submit-button">
-              Upload
+            <button 
+              type="submit" 
+              className="submit-button"
+              disabled={uploading}
+            >
+              {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
         </form>
