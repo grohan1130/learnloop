@@ -4,6 +4,7 @@ import { courseService } from '../services/api/courseService'
 import { authService } from '../services/api/authService'
 import UploadMaterialForm from '../components/UploadMaterialForm'
 import CourseFiles from '../components/CourseFiles'
+import CourseCodeDisplay from '../components/CourseCodeDisplay'
 import logo from '../assets/images/learnLoopLogoNoText.svg'
 import StudentManagement from '../components/StudentManagement'
 
@@ -96,35 +97,39 @@ function CourseDashboard() {
         </div>
       </div>
       
-      <div className="course-management">
-        <h2>Course Management</h2>
-        <div className="management-options">
-          <button onClick={() => setShowStudentManagement(true)}>
-            Manage Students
-          </button>
-          <button>Create Assignment</button>
-          <button onClick={() => setShowUploadForm(true)}>
-            Add Course Material
-          </button>
+      <div className="dashboard-content">
+        {course.teacher && <CourseCodeDisplay courseId={courseId} />}
+        
+        <div className="course-management">
+          <h2>Course Management</h2>
+          <div className="management-options">
+            <button onClick={() => setShowStudentManagement(true)}>
+              Manage Students
+            </button>
+            <button>Create Assignment</button>
+            <button onClick={() => setShowUploadForm(true)}>
+              Add Course Material
+            </button>
+          </div>
         </div>
+
+        <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
+
+        {showStudentManagement && (
+          <StudentManagement
+            courseId={courseId}
+            onClose={() => setShowStudentManagement(false)}
+          />
+        )}
+
+        {showUploadForm && (
+          <UploadMaterialForm 
+            courseId={courseId}
+            onClose={() => setShowUploadForm(false)}
+            onUploadComplete={handleUploadComplete}
+          />
+        )}
       </div>
-
-      <CourseFiles courseId={courseId} refreshTrigger={refreshFiles} />
-
-      {showStudentManagement && (
-        <StudentManagement
-          courseId={courseId}
-          onClose={() => setShowStudentManagement(false)}
-        />
-      )}
-
-      {showUploadForm && (
-        <UploadMaterialForm 
-          courseId={courseId}
-          onClose={() => setShowUploadForm(false)}
-          onUploadComplete={handleUploadComplete}
-        />
-      )}
     </div>
   )
 }

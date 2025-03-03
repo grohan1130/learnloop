@@ -24,8 +24,14 @@ def create_response(
         >>> error_response = create_response(None, "Not found", 404)
     """
     if error:
-        return jsonify({"error": error}), status_code
-    return jsonify(data), status_code
+        response = jsonify({"error": error})
+    else:
+        response = jsonify(data)
+    
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response, status_code
 
 def serialize_object_id(obj: Dict[str, Any]) -> Dict[str, Any]:
     """Convert MongoDB ObjectId to string in a dictionary.
@@ -45,3 +51,18 @@ def serialize_object_id(obj: Dict[str, Any]) -> Dict[str, Any]:
     if '_id' in obj:
         obj['_id'] = str(obj['_id'])
     return obj 
+
+def serialize_mongo_doc(doc):
+    """Convert MongoDB document to JSON-serializable format."""
+    if doc is None:
+        return None
+        
+    if isinstance(doc, dict):
+        return {
+            key: str(value) if isinstance(value, ObjectId) else serialize_mongo_doc(value)
+            for key, value in doc.items()
+        }
+    elif isinstance(doc, list):
+        return [serialize_mongo_doc(item) for item in doc]
+    else:
+        return doc 

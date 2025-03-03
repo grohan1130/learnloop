@@ -1,12 +1,14 @@
 from flask import Blueprint, request, g
 from services.course_service import CourseService
-from utils.helpers import create_response
+from utils.helpers import create_response, serialize_mongo_doc
 from typing import Tuple, Dict, Any
 import json
 from functools import wraps
 from services.s3_service import S3Service
 import io
 from datetime import datetime
+from config.database import course_collection, enrollment_collection, teacher_collection
+from bson import ObjectId
 
 courses_bp = Blueprint('courses', __name__)
 
@@ -220,4 +222,102 @@ def remove_student(course_id, student_id):
         CourseService.remove_student(course_id, student_id)
         return create_response({"message": "Student removed successfully"})
     except Exception as e:
+        return create_response(error=str(e), status_code=500) 
+
+@courses_bp.route('/<course_id>/code', methods=['GET'])
+@teacher_required
+def get_course_code(course_id):
+    """Get course code for a specific course."""
+    try:
+        course = course_collection.find_one({"_id": ObjectId(course_id)})
+        if not course:
+            return create_response(error="Course not found", status_code=404)
+        return create_response({"courseCode": course.get("courseCode")})
+    except Exception as e:
+        return create_response(error=str(e), status_code=500)
+
+@courses_bp.route('/<course_id>/code/generate', methods=['POST'])
+@teacher_required
+def generate_course_code(course_id):
+    """Generate a new course code."""
+    try:
+        new_code = CourseService.generate_course_code()
+        course_collection.update_one(
+            {"_id": ObjectId(course_id)},
+            {"$set": {"courseCode": new_code}}
+        )
+        return create_response({"courseCode": new_code})
+    except Exception as e:
+        return create_response(error=str(e), status_code=500)
+
+@courses_bp.route('/enroll', methods=['POST'])
+def enroll_with_code():
+    """Enroll in a course using a course code."""
+    try:
+        data = request.json
+        course_code = data.get('courseCode')
+        student_id = data.get('studentId')
+        
+        if not course_code or not student_id:
+            return create_response(error="Course code and student ID required", status_code=400)
+
+        course = CourseService.enroll_student_by_code(course_code, student_id)
+        return create_response({"course": course})
+    except ValueError as e:
+        return create_response(error=str(e), status_code=400)
+    except Exception as e:
+        return create_response(error=str(e), status_code=500) 
+
+@courses_bp.route('/student/<student_id>', methods=['GET'])
+def get_student_courses(student_id):
+    """Get all courses for a student."""
+    try:
+        print(f"Fetching courses for student: {student_id}")
+        try:
+            student_object_id = ObjectId(student_id)
+        except Exception as e:
+            print(f"Invalid student ID format: {student_id}")
+            return create_response(error="Invalid student ID format", status_code=400)
+
+        # Find all enrollments for this student
+        enrollments = enrollment_collection.find({
+            "studentId": student_object_id,
+            "status": "active"
+        })
+        
+        # Convert cursor to list to check if empty
+        try:
+            enrollments = list(enrollments)
+            print(f"Found {len(enrollments)} enrollments")
+        except Exception as e:
+            print(f"Error converting enrollments to list: {str(e)}")
+            return create_response(error="Error accessing enrollments", status_code=500)
+        
+        # Get course details for each enrollment
+        courses = []
+        for enrollment in enrollments:
+            try:
+                print(f"Processing enrollment: {enrollment}")
+                course = course_collection.find_one({"_id": enrollment["courseId"]})
+                print(f"Found course: {course}")
+                if course:
+                    # Get teacher info
+                    teacher = teacher_collection.find_one({"_id": course["teacherId"]})
+                    print(f"Found teacher: {teacher}")
+                    if teacher:
+                        course["teacher"] = {
+                            "firstName": teacher["firstName"],
+                            "lastName": teacher["lastName"]
+                        }
+                    courses.append(serialize_mongo_doc(course))
+            except Exception as e:
+                print(f"Error processing enrollment {enrollment}: {str(e)}")
+                continue
+        
+        print(f"Returning {len(courses)} courses")
+        return create_response({"courses": courses})
+    except Exception as e:
+        print(f"Error getting student courses: {str(e)}")
+        import traceback
+        print(traceback.format_exc())
         return create_response(error=str(e), status_code=500) 

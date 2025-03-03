@@ -15,7 +15,10 @@ export const authService = {
 
     // Login
     login: async (credentials) => {
-        const response = await axiosInstance.post('/login', credentials)
+        const response = await axiosInstance.post('/api/auth/login', credentials)
+        if (response.data.user) {
+            localStorage.setItem('user', JSON.stringify(response.data.user))
+        }
         return response.data
     },
 
@@ -39,6 +42,11 @@ export const authService = {
     // Get user profile
     getProfile: async (userId) => {
         const response = await axiosInstance.get(`/users/${userId}`)
+        return response.data
+    },
+
+    register: async (userData) => {
+        const response = await axiosInstance.post('/api/auth/register', userData)
         return response.data
     }
 } 

@@ -3,7 +3,7 @@ from services.auth_service import AuthService
 from utils.helpers import create_response
 from typing import Tuple, Dict, Any
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 @auth_bp.route('/register', methods=['POST'])
 def register() -> Tuple[Dict[str, Any], int]:

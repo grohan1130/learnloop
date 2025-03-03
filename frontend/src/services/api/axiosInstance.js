@@ -2,8 +2,11 @@ import axios from 'axios'
 import { API_CONFIG } from './config'
 
 const axiosInstance = axios.create({
-    baseURL: API_CONFIG.BASE_URL,
+    baseURL: 'http://localhost:5002',
     timeout: API_CONFIG.TIMEOUT,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 // Request interceptor

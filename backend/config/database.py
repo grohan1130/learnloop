@@ -32,4 +32,16 @@ db = client.learnloopcluster1db
 # Collections
 teacher_collection = db.teacherDirectory
 student_collection = db.studentDirectory
-course_collection = db.courseCatalog 
+course_collection = db.courseCatalog
+enrollment_collection = db.enrollments
+
+def init_db():
+    """Initialize database collections if they don't exist."""
+    if 'teacherDirectory' not in db.list_collection_names():
+        db.create_collection('teacherDirectory')
+    if 'studentDirectory' not in db.list_collection_names():
+        db.create_collection('studentDirectory')
+    if 'courseCatalog' not in db.list_collection_names():
+        db.create_collection('courseCatalog')
+    if 'enrollments' not in db.list_collection_names():
+        db.create_collection('enrollments') 

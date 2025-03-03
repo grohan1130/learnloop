@@ -3,16 +3,26 @@ from flask_cors import CORS
 from routes.auth import auth_bp
 from routes.courses import courses_bp
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+def create_app():
+    app = Flask(__name__)
+    CORS(app, resources={
+        r"/*": {
+            "origins": ["http://localhost:5173"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin"]
+        }
+    })
 
-# Register blueprints
-app.register_blueprint(auth_bp, url_prefix='/api')
-app.register_blueprint(courses_bp, url_prefix='/api/courses')
+    # Register blueprints
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(courses_bp, url_prefix='/api/courses')
 
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    return {"status": "healthy"}, 200
+    @app.route('/health')
+    def health_check():
+        return {"status": "healthy"}, 200
+
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True, port=5002) 

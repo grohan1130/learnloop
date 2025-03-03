@@ -1,9 +1,22 @@
 from typing import Dict, Any, List
 from bson import ObjectId
-from config.database import course_collection, teacher_collection
+from config.database import course_collection, teacher_collection, enrollment_collection
 from utils.helpers import serialize_object_id
+from utils.helpers import serialize_mongo_doc
+import random
+import string
+from datetime import datetime
 
 class CourseService:
+    @staticmethod
+    def generate_course_code():
+        """Generate a unique 6-character course code."""
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            # Check if code already exists
+            if not course_collection.find_one({"courseCode": code}):
+                return code
+
     @staticmethod
     def create_course(course_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new course in the database.
@@ -49,6 +62,7 @@ class CourseService:
             except Exception as e:
                 raise ValueError(f"Invalid teacherId format: {course_data.get('teacherId', 'missing')}")
 
+            course_data["courseCode"] = CourseService.generate_course_code()
             result = course_collection.insert_one(course_data)
             return {"courseId": str(result.inserted_id)}
         except Exception as e:
@@ -178,4 +192,43 @@ class CourseService:
             
         except Exception as e:
             print(f"Error in get_course_with_teacher: {str(e)}")
+            raise 
+
+    @staticmethod
+    def enroll_student_by_code(course_code, student_id):
+        """Enroll a student using a course code."""
+        try:
+            # Find course by code
+            course = course_collection.find_one({"courseCode": course_code})
+            if not course:
+                raise ValueError("Invalid course code")
+
+            # Convert student_id to ObjectId
+            student_id = ObjectId(student_id)
+
+            # Check if already enrolled
+            existing = enrollment_collection.find_one({
+                "courseId": course["_id"],
+                "studentId": student_id
+            })
+            if existing:
+                raise ValueError("Already enrolled in this course")
+
+            # Create enrollment
+            enrollment = {
+                "courseId": course["_id"],
+                "studentId": student_id,
+                "enrollDate": datetime.utcnow(),
+                "status": "active"
+            }
+            
+            print(f"Creating enrollment: {enrollment}")
+            result = enrollment_collection.insert_one(enrollment)
+            print(f"Enrollment created with ID: {result.inserted_id}")
+
+            return serialize_mongo_doc(course)
+        except Exception as e:
+            print(f"Error in enroll_student_by_code: {str(e)}")
+            import traceback
+            print(traceback.format_exc())
             raise 
