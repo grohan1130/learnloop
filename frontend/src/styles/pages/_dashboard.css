@@ -1,0 +1,21 @@
+/* Dashboard Styles */
+.dashboard-container {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+}
+
+.dashboard-header {
+  composes: card margin-2 flex-between;
+}
+
+.dashboard-header h1 {
+  composes: text-primary;
+  font-size: var(--text-2xl);
+  margin: 0;
+}
+
+.dashboard-header p {
+  composes: text-secondary;
+  font-size: var(--text-base);
+  margin-top: 0.5rem;
+} 

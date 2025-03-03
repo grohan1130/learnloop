@@ -1,0 +1,5 @@
+/* Grid styles */
+.grid {
+  display: grid;
+  gap: var(--spacing-md);
+} 

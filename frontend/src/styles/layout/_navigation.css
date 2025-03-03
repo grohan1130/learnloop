@@ -1,0 +1,30 @@
+/* Navigation styles */
+.home-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-xl);
+  margin: 1rem 2rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Update logo size */
+.logo {
+  font-size: 1.225rem;  /* Reduced from 1.75rem (30% smaller) */
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+/* ... rest of navigation styles ... */ 

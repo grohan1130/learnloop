@@ -1,0 +1,19 @@
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.course-card {
+  background: #eff5ff;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ... rest of card styles ... */ 

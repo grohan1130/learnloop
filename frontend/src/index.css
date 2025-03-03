@@ -1,0 +1,623 @@
+/* ==========================================================================
+   Base Styles & Reset
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #eff5ff 0%, #e5eeff 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Layout Containers
+   ========================================================================== */
+.dashboard-container,
+.home-container,
+.auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eff5ff 0%, #e5eeff 100%);
+  padding: 0;
+  margin: 0;
+}
+
+/* Update home container to use flex for sticky footer */
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Navigation & Header
+   ========================================================================== */
+.home-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  margin: 1rem 2rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-logo img {
+  height: 2rem;
+  width: auto;
+}
+
+.logo {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: #003d6e;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Dashboard Header
+   ========================================================================== */
+.dashboard-header {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  color: #003d6e;
+  font-size: var(--text-2xl);
+}
+
+.dashboard-header p {
+  margin: 0.5rem 0 0 0;
+  color: #666;
+  font-size: var(--text-base);
+}
+
+/* ==========================================================================
+   Course Section Styles
+   ========================================================================== */
+.course-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin: 2rem;
+}
+
+.course-section h2 {
+  color: #003d6e;
+  margin-bottom: 1.5rem;
+  font-size: var(--text-lg);
+}
+
+.course-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.course-section-header h2 {
+  margin-bottom: 0;
+}
+
+/* Course Grid and Cards */
+.course-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.course-card {
+  background: #eff5ff;
+  border: none;
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  background: #e5eeff;
+}
+
+.course-card:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.course-card h4 {
+  color: #003d6e;
+  font-size: var(--text-md);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.course-card p {
+  color: #666;
+  margin: 0.25rem 0;
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+/* Update all button base styles */
+.submit-button,
+.auth-submit,
+.cta-button,
+.nav-button,
+.back-button,
+.logout-button,
+.cancel-button {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+/* Primary Buttons */
+.submit-button,
+.auth-submit,
+.cta-button {
+  background: #003d6e;
+  color: white;
+  border: none;
+}
+
+/* Navigation Buttons */
+.nav-button {
+  border: 1px solid #003d6e;
+  background: transparent;
+  color: #003d6e;
+}
+
+.nav-button.primary {
+  background: #003d6e;
+  color: white;
+}
+
+/* Add hover effects */
+.nav-button:hover {
+  background: rgba(0, 61, 110, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-button.primary:hover {
+  background: #002b4e;  /* Darker blue */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Back Button */
+.back-button {
+  border: 1px solid #003d6e;
+  background-color: transparent;
+  color: #003d6e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Logout Button */
+.logout-button {
+  border: 1px solid #82121d;
+  background-color: transparent;
+  color: #82121d;
+}
+
+/* Cancel Button */
+.cancel-button {
+  border: 1px solid #ddd;
+  background: white;
+}
+
+/* Hover states */
+.submit-button:hover,
+.auth-submit:hover,
+.cta-button:hover {
+  background: #002b4e;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.back-button:hover {
+  background: rgba(0, 61, 110, 0.1);
+  transform: translateX(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logout-button:hover {
+  background-color: #82121d;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ==========================================================================
+   Form Styles
+   ========================================================================== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: var(--text-base);
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: var(--text-base);
+}
+
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  font-size: var(--text-sm);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #003d6e;
+}
+
+/* ==========================================================================
+   Modal Styles
+   ========================================================================== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: var(--text-lg);
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #666;
+}
+
+/* ==========================================================================
+   Auth Pages Styles
+   ========================================================================== */
+.auth-form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.auth-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.auth-card h2 {
+  color: #003d6e;
+  margin: 0 0 0.5rem;
+  font-size: var(--text-xl);
+  text-align: center;
+}
+
+.auth-subtitle {
+  color: #666;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: var(--text-base);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.auth-form .form-group {
+  margin: 0;
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  outline: none;
+  border-color: #003d6e;
+}
+
+.auth-error {
+  background: #fff2f2;
+  color: #82121d;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+}
+
+.auth-switch a {
+  color: #003d6e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Home Page Specific Styles
+   ========================================================================== */
+/* Push main content to fill available space */
+.hero-section {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.hero-subtitle {
+  font-size: var(--text-md);
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  margin-bottom: 4rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* Force 3 columns */
+  gap: 2rem;
+  margin-top: 4rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.feature-card h3 {
+  color: #003d6e;
+  margin-bottom: 1rem;
+  font-size: var(--text-lg);
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+  font-size: var(--text-base);
+}
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;  /* Stack cards on mobile */
+  }
+}
+
+/* Course Management Section */
+.course-management {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin: 2rem;
+}
+
+.course-management h2 {
+  color: #003d6e;
+  margin-bottom: 1.5rem;
+  font-size: var(--text-lg);
+}
+
+/* Course Management Buttons */
+.management-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.management-options button {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: #003d6e;
+  color: white;
+  border: none;
+  width: 100%;
+  height: 2.5rem;
+}
+
+.management-options button:hover {
+  background: #002b4e;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ==========================================================================
+   Footer Styles
+   ========================================================================== */
+/* Update footer styles */
+.site-footer {
+  background: white;
+  padding: 2rem;
+  margin: 0 2rem 2rem 2rem;  /* Remove top margin, keep bottom margin */
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: auto;  /* Push to bottom */
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.footer-links a {
+  color: #003d6e;
+  text-decoration: none;
+  font-size: var(--text-base);
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #002b4e;
+  text-decoration: underline;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-logo img {
+  height: 2rem;
+  width: auto;
+}
+
+.footer-logo span {
+  color: #003d6e;
+  font-weight: 600;
+  font-size: var(--text-base);
+}
